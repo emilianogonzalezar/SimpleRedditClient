@@ -85,6 +85,38 @@ public class TopListingItemData implements Parcelable
         this.permalink = permalink;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public Integer getNumComments() {
+        return numComments;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public Double getCreated() {
+        return created;
+    }
+
+    public Double getCreatedUtc() {
+        return createdUtc;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getPermalink() {
+        return permalink;
+    }
+
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeValue(title);

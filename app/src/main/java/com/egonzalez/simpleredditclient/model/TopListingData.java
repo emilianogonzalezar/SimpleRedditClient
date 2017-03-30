@@ -41,6 +41,10 @@ public class TopListingData implements Parcelable
         this.children = children;
     }
 
+    public List<TopListingItem> getChildren() {
+        return children;
+    }
+
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeList(children);

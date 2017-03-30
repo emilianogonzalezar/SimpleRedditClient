@@ -39,6 +39,10 @@ public class TopListingItem implements Parcelable
         this.data = data;
     }
 
+    public TopListingItemData getData() {
+        return data;
+    }
+
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeValue(data);
