@@ -30,9 +30,6 @@ public class TopListingItemData implements Parcelable
     @SerializedName("url")
     @Expose
     private String url;
-    @SerializedName("permalink")
-    @Expose
-    private String permalink;
 
     public static final Creator<TopListingItemData> CREATOR = new Creator<TopListingItemData>() {
 
@@ -47,7 +44,6 @@ public class TopListingItemData implements Parcelable
             instance.created = ((Double) in.readValue((Double.class.getClassLoader())));
             instance.createdUtc = ((Double) in.readValue((Double.class.getClassLoader())));
             instance.url = ((String) in.readValue((String.class.getClassLoader())));
-            instance.permalink = ((String) in.readValue((String.class.getClassLoader())));
             return instance;
         }
 
@@ -71,8 +67,7 @@ public class TopListingItemData implements Parcelable
         final String thumbnail,
         final Double created,
         final Double createdUtc,
-        final String url,
-        final String permalink) {
+        final String url) {
 
         super();
         this.title = title;
@@ -82,7 +77,6 @@ public class TopListingItemData implements Parcelable
         this.created = created;
         this.createdUtc = createdUtc;
         this.url = url;
-        this.permalink = permalink;
     }
 
     public String getTitle() {
@@ -113,10 +107,6 @@ public class TopListingItemData implements Parcelable
         return url;
     }
 
-    public String getPermalink() {
-        return permalink;
-    }
-
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeValue(title);
@@ -126,7 +116,6 @@ public class TopListingItemData implements Parcelable
         dest.writeValue(created);
         dest.writeValue(createdUtc);
         dest.writeValue(url);
-        dest.writeValue(permalink);
     }
 
     @Override
