@@ -10,7 +10,7 @@ import retrofit2.http.Query;
  */
 
 public interface RedditService {
-    @GET("top.json?")
+    @GET("top.json?raw_json=1&")
     Call<TopListing> getTopListing(
         @Query("count") int count,
         @Query("limit") int limit);
