@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/top_listing_item_margin"
+    android:layout_marginBottom="@dimen/top_listing_item_margin">
+
+    <ImageView
+        android:id="@+id/top_listing_item_thumbnail"
+        android:layout_width="@dimen/thumbnail_size"
+        android:layout_height="@dimen/thumbnail_size"
+        android:background="@color/light_gray"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/top_listing_item_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@+id/top_listing_item_thumbnail"/>
+
+    <TextView
+        android:id="@+id/top_listing_item_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@+id/top_listing_item_thumbnail"
+        app:layout_constraintTop_toBottomOf="@+id/top_listing_item_title"/>
+
+    <TextView
+        android:id="@+id/top_listing_item_comments_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@+id/top_listing_item_thumbnail"
+        app:layout_constraintTop_toBottomOf="@+id/top_listing_item_author"/>
 
 </android.support.constraint.ConstraintLayout>

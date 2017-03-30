@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SimpleRedditClient</string>
+    <string name="author_and_date">Sent %1$s by %2$s</string>
+    <string name="comments_number">%1$d comments</string>
 </resources>

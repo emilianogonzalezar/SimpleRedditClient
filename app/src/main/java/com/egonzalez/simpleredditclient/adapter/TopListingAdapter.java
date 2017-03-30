@@ -4,10 +4,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.egonzalez.simpleredditclient.R;
 import com.egonzalez.simpleredditclient.model.TopListing;
 import com.egonzalez.simpleredditclient.model.TopListingItemData;
+import com.squareup.picasso.Picasso;
+import java.util.Calendar;
+import java.util.TimeZone;
+import org.ocpsoft.prettytime.PrettyTime;
 
 public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.ViewHolder> {
 
@@ -35,8 +40,35 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.Vi
 
         final TopListingItemData itemData = mTopListing.getData().getChildren().get(position).getData();
 
-        final TextView textView = (TextView) v.findViewById(R.id.top_listing_item_title);
-        textView.setText(itemData.getTitle());
+        if (itemData.getThumbnail() != null) {
+            final ImageView imageView = (ImageView) v.findViewById(R.id.top_listing_item_thumbnail);
+
+            Picasso.with(v.getContext().getApplicationContext())
+                .load(itemData.getThumbnail())
+                .into(imageView);
+
+            imageView.setVisibility(View.VISIBLE);
+        }
+
+        final TextView title = (TextView) v.findViewById(R.id.top_listing_item_title);
+        title.setText(itemData.getTitle());
+
+        final Calendar created = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        created.setTimeInMillis(itemData.getCreatedUtc().longValue() * 1000L);
+
+        final String authorName = itemData.getAuthor();
+        final String authorAndDateText = v.getContext().getString(
+            R.string.author_and_date,
+            new PrettyTime().format(created),
+            authorName);
+
+        final TextView authorAndDate = (TextView) v.findViewById(R.id.top_listing_item_author);
+        authorAndDate.setText(authorAndDateText);
+
+        final String commentsNumberText = v.getContext().getString(R.string.comments_number, itemData.getNumComments());
+
+        final TextView commentsNumber = (TextView) v.findViewById(R.id.top_listing_item_comments_number);
+        commentsNumber.setText(commentsNumberText);
     }
 
     @Override
