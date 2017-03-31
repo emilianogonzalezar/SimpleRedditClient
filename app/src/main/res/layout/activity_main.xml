@@ -13,6 +13,38 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/activity_main_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/activity_main_connection_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/reddit"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_connection_error_text"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/connection_error"/>
+
+        <Button
+            android:id="@+id/activity_main_connection_error_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_connection_error_button"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/retry"/>
+
+    </LinearLayout>
 
 </RelativeLayout>
