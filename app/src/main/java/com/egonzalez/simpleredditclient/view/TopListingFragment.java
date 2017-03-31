@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import com.egonzalez.simpleredditclient.R;
 import com.egonzalez.simpleredditclient.adapter.TopListingAdapter;
-import com.egonzalez.simpleredditclient.model.TopListing;
+import com.egonzalez.simpleredditclient.model.TopListingData;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -26,13 +26,13 @@ public class TopListingFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
         @Nullable final Bundle savedInstanceState) {
 
-        final TopListing topListing = getArguments().getParcelable(BUNDLE_ARGUMENT_ITEMS);
+        final TopListingData topListingItems = getArguments().getParcelable(BUNDLE_ARGUMENT_ITEMS);
 
         final RecyclerView recyclerView =
             (RecyclerView) inflater.inflate(R.layout.fragment_top_listing, container, false);
 
-        if (topListing != null) {
-            final TopListingAdapter adapter = new TopListingAdapter(topListing.getData().getChildren());
+        if (topListingItems != null) {
+            final TopListingAdapter adapter = new TopListingAdapter(topListingItems.getChildren());
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);
             adapter.getItemClicks().subscribeOn(Schedulers.io())
