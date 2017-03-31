@@ -31,8 +31,8 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.Vi
 
     private final PublishSubject<TopListingItemData> onClickSubject = PublishSubject.create();
 
-    public TopListingAdapter(final TopListing topListing) {
-        mTopListingItems = topListing.getData().getChildren();
+    public TopListingAdapter(final List<TopListingItem> topListingItems) {
+        mTopListingItems = topListingItems;
     }
 
     @Override
