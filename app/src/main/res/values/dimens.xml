@@ -2,4 +2,5 @@
 <resources>
     <dimen name="thumbnail_size">96dp</dimen>
     <dimen name="top_listing_item_margin">3dp</dimen>
+    <dimen name="top_listing_margin">8dp</dimen>
 </resources>

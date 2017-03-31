@@ -50,10 +50,11 @@ public class TopListingFragment extends Fragment {
         final int count = args.getInt(BUNDLE_ARGUMENT_COUNT);
         final int limit = args.getInt(BUNDLE_ARGUMENT_LIMIT);
 
+        showProgress();
         ServiceFactory.getInstance().getRedditService().getTopListing(count, limit).enqueue(new Callback<TopListing>() {
             @Override
             public void onResponse(final Call<TopListing> call, final Response<TopListing> response) {
-                mProgressBar.setVisibility(View.GONE);
+                hideProgress();
 
                 final RecyclerView.Adapter adapter = new TopListingAdapter(response.body());
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -64,5 +65,16 @@ public class TopListingFragment extends Fragment {
             public void onFailure(final Call<TopListing> call, final Throwable t) {
             }
         });
+    }
+
+    private void showProgress() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
+    }
+
+    private void hideProgress() {
+        mProgressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+
     }
 }

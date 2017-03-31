@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.egonzalez.simpleredditclient.R;
@@ -40,14 +41,16 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.Vi
 
         final TopListingItemData itemData = mTopListing.getData().getChildren().get(position).getData();
 
-        if (itemData.getThumbnail() != null) {
+        if (itemData.getThumbnail() != null && URLUtil.isValidUrl(itemData.getThumbnail())) {
             final ImageView imageView = (ImageView) v.findViewById(R.id.top_listing_item_thumbnail);
 
+            Picasso.with(v.getContext().getApplicationContext()).cancelRequest(imageView);
             Picasso.with(v.getContext().getApplicationContext())
                 .load(itemData.getThumbnail())
                 .into(imageView);
-
-            imageView.setVisibility(View.VISIBLE);
+        } else {
+            final ImageView imageView = (ImageView) v.findViewById(R.id.top_listing_item_thumbnail);
+            imageView.setImageResource(R.drawable.thumbnail_default);
         }
 
         final TextView title = (TextView) v.findViewById(R.id.top_listing_item_title);
