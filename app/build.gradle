@@ -52,6 +52,9 @@ dependencies {
     // Pretty Time
     compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
 
+    // ViewPagerIndicator
+    compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
+
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group:'com.android.support', module:'support-annotations'
     })

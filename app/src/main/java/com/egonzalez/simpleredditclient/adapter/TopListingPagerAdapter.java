@@ -39,6 +39,11 @@ public class TopListingPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return mTopListingItems.size() / mItemsPerPage;
+        return (int) Math.ceil(mTopListingItems.size() / mItemsPerPage);
+    }
+
+    @Override
+    public CharSequence getPageTitle(final int position) {
+        return String.valueOf(position + 1);
     }
 }

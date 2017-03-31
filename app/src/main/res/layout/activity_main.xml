@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ProgressBar
         android:id="@+id/activity_main_progressbar"
@@ -10,11 +11,25 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/activity_main_viewpager"
+    <RelativeLayout
+        android:id="@+id/activity_main_viewpager_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone">
+
+        <com.viewpagerindicator.TitlePageIndicator
+            android:id="@+id/activity_main_viewpager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimaryDark"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/activity_main_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/activity_main_viewpager_indicator"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/activity_main_connection_error"

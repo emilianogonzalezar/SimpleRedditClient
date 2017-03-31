@@ -9,6 +9,7 @@ import com.egonzalez.simpleredditclient.R;
 import com.egonzalez.simpleredditclient.adapter.TopListingPagerAdapter;
 import com.egonzalez.simpleredditclient.model.TopListing;
 import com.egonzalez.simpleredditclient.service.ServiceFactory;
+import com.viewpagerindicator.TitlePageIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,8 +19,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int MAX_ITEMS_PER_PAGE = 10;
 
     private View mConnectionError;
-    private View mViewPager;
+    private View mViewPagerLayout;
     private View mProgressBar;
+    private TitlePageIndicator mPageIndicator;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -27,8 +29,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mConnectionError = findViewById(R.id.activity_main_connection_error);
-        mViewPager = findViewById(R.id.activity_main_viewpager);
+        mViewPagerLayout = findViewById(R.id.activity_main_viewpager_layout);
         mProgressBar = findViewById(R.id.activity_main_progressbar);
+        mPageIndicator = (TitlePageIndicator) findViewById(R.id.activity_main_viewpager_indicator);
 
         final Button retryButton = (Button) findViewById(R.id.activity_main_connection_error_button);
         retryButton.setOnClickListener(v -> {
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     response.body())
                 );
 
+                mPageIndicator.setViewPager(viewPager);
             }
 
             @Override
@@ -65,19 +69,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void showConnectionError() {
         mConnectionError.setVisibility(View.VISIBLE);
-        mViewPager.setVisibility(View.GONE);
+        mViewPagerLayout.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.GONE);
     }
 
     private void showViewPager() {
         mConnectionError.setVisibility(View.GONE);
-        mViewPager.setVisibility(View.VISIBLE);
+        mViewPagerLayout.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
     }
 
     private void showProgress() {
         mConnectionError.setVisibility(View.GONE);
-        mViewPager.setVisibility(View.GONE);
+        mViewPagerLayout.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
     }
 }
