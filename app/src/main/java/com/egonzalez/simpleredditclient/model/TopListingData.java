@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TopListingData implements Parcelable
@@ -18,7 +19,7 @@ public class TopListingData implements Parcelable
 
         @Override
         public TopListingData createFromParcel(final Parcel in) {
-            final TopListingData instance = new TopListingData();
+            final TopListingData instance = new TopListingData(new ArrayList<>());
             in.readList(instance.children, (TopListingItem.class.getClassLoader()));
             return instance;
         }

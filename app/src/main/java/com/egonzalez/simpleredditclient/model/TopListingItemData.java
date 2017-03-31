@@ -101,8 +101,8 @@ public class TopListingItemData implements Parcelable
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeValue(title);
         dest.writeValue(author);
-        dest.writeValue(numComments);
         dest.writeValue(thumbnail);
+        dest.writeValue(numComments);
         dest.writeValue(createdUtc);
         dest.writeValue(url);
     }
