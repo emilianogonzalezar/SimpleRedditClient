@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="toolbar_title_margin_left">16dp</dimen>
+
     <dimen name="thumbnail_size">96dp</dimen>
     <dimen name="top_listing_item_margin">3dp</dimen>
     <dimen name="top_listing_margin">8dp</dimen>
