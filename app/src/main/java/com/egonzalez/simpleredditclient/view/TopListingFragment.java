@@ -1,5 +1,7 @@
 package com.egonzalez.simpleredditclient.view;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,11 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ProgressBar;
 import com.egonzalez.simpleredditclient.R;
 import com.egonzalez.simpleredditclient.adapter.TopListingAdapter;
 import com.egonzalez.simpleredditclient.model.TopListing;
 import com.egonzalez.simpleredditclient.service.ServiceFactory;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,14 +40,14 @@ public class TopListingFragment extends Fragment {
         mProgressBar = (ProgressBar) view.findViewById(R.id.fragment_top_listing_progressbar);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_top_listing_recyclerview);
 
+        populateView();
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        populateView();
     }
 
     private void populateView() {
@@ -56,9 +61,17 @@ public class TopListingFragment extends Fragment {
             public void onResponse(final Call<TopListing> call, final Response<TopListing> response) {
                 hideProgress();
 
-                final RecyclerView.Adapter adapter = new TopListingAdapter(response.body());
+                final TopListingAdapter adapter = new TopListingAdapter(response.body());
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 mRecyclerView.setAdapter(adapter);
+                adapter.getItemClicks().subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(item -> {
+                        if (URLUtil.isValidUrl(item.getUrl())) {
+                            final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getUrl()));
+                            startActivity(browserIntent);
+                        }
+                    });
             }
 
             @Override

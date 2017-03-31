@@ -9,9 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.egonzalez.simpleredditclient.R;
 import com.egonzalez.simpleredditclient.model.TopListing;
+import com.egonzalez.simpleredditclient.model.TopListingItem;
 import com.egonzalez.simpleredditclient.model.TopListingItemData;
 import com.squareup.picasso.Picasso;
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -23,23 +27,33 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.Vi
         }
     }
 
-    private final TopListing mTopListing;
+    private final List<TopListingItem> mTopListingItems;
+
+    private final PublishSubject<TopListingItemData> onClickSubject = PublishSubject.create();
 
     public TopListingAdapter(final TopListing topListing) {
-        mTopListing = topListing;
+        mTopListingItems = topListing.getData().getChildren();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
         final View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.top_listing_item, parent, false);
-        return new ViewHolder(v);
+        final ViewHolder viewHolder = new ViewHolder(v);
+
+        v.setOnClickListener(view -> {
+            final int index = viewHolder.getAdapterPosition();
+            final TopListingItemData itemData = mTopListingItems.get(index).getData();
+            onClickSubject.onNext(itemData);
+        });
+
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final View v = holder.itemView;
 
-        final TopListingItemData itemData = mTopListing.getData().getChildren().get(position).getData();
+        final TopListingItemData itemData = mTopListingItems.get(position).getData();
 
         if (itemData.getThumbnail() != null && URLUtil.isValidUrl(itemData.getThumbnail())) {
             final ImageView imageView = (ImageView) v.findViewById(R.id.top_listing_item_thumbnail);
@@ -76,6 +90,10 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return mTopListing.getData().getChildren().size();
+        return mTopListingItems.size();
+    }
+
+    public Observable<TopListingItemData> getItemClicks() {
+        return onClickSubject;
     }
 }
