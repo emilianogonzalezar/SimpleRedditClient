@@ -22,7 +22,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/colorPrimaryDark"/>
+            android:textColor="@color/dark_blue"
+            app:selectedColor="@color/dark_blue"
+            android:background="@color/light_blue"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/activity_main_viewpager"
