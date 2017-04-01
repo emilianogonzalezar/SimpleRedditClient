@@ -37,9 +37,9 @@ public class TopListingFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             adapter.getItemClicks().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(item -> {
-                    if (URLUtil.isValidUrl(item.getUrl())) {
-                        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getUrl()));
+                .subscribe(topListingItemData -> {
+                    if (URLUtil.isValidUrl(topListingItemData.getUrl())) {
+                        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(topListingItemData.getUrl()));
                         startActivity(browserIntent);
                     }
                 });
