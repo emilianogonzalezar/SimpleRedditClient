@@ -8,7 +8,6 @@ import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.egonzalez.simpleredditclient.R;
-import com.egonzalez.simpleredditclient.model.TopListing;
 import com.egonzalez.simpleredditclient.model.TopListingItem;
 import com.egonzalez.simpleredditclient.model.TopListingItemData;
 import com.squareup.picasso.Picasso;

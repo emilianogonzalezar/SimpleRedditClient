@@ -16,12 +16,16 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String SAVEDINSTANCESTATE_TOP_LISTING = "SAVEDINSTANCESTATE_TOP_LISTING";
+
     private static final int MAX_ITEMS_PER_PAGE = 10;
 
     private View mConnectionError;
     private View mViewPagerLayout;
     private View mProgressBar;
     private TitlePageIndicator mPageIndicator;
+
+    private TopListing mTopListing;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -38,7 +42,28 @@ public class MainActivity extends AppCompatActivity {
             requestData();
         });
 
-        requestData();
+        // Restore state
+        if (savedInstanceState != null) {
+            mTopListing = savedInstanceState.getParcelable(SAVEDINSTANCESTATE_TOP_LISTING);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mTopListing == null) {
+            requestData();
+        } else {
+            populate();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(SAVEDINSTANCESTATE_TOP_LISTING, mTopListing);
     }
 
     private void requestData() {
@@ -46,18 +71,8 @@ public class MainActivity extends AppCompatActivity {
         ServiceFactory.getInstance().getRedditService().getTopListing(0, 50).enqueue(new Callback<TopListing>() {
             @Override
             public void onResponse(final Call<TopListing> call, final Response<TopListing> response) {
-                showViewPager();
-                final View progressBar = findViewById(R.id.activity_main_progressbar);
-                final ViewPager viewPager = (ViewPager) findViewById(R.id.activity_main_viewpager);
-
-                progressBar.setVisibility(View.GONE);
-                viewPager.setAdapter(new TopListingPagerAdapter(
-                    getSupportFragmentManager(),
-                    MAX_ITEMS_PER_PAGE,
-                    response.body())
-                );
-
-                mPageIndicator.setViewPager(viewPager);
+                mTopListing = response.body();
+                populate();
             }
 
             @Override
@@ -65,6 +80,20 @@ public class MainActivity extends AppCompatActivity {
                 showConnectionError();
             }
         });
+    }
+
+    private void populate() {
+        showViewPager();
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.activity_main_viewpager);
+
+        viewPager.setAdapter(new TopListingPagerAdapter(
+            getSupportFragmentManager(),
+            MAX_ITEMS_PER_PAGE,
+            mTopListing)
+        );
+
+        mPageIndicator.setViewPager(viewPager);
     }
 
     private void showConnectionError() {
