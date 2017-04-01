@@ -1,61 +1,29 @@
 package com.egonzalez.simpleredditclient.view;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import com.egonzalez.simpleredditclient.R;
-import com.egonzalez.simpleredditclient.adapter.TopListingPagerAdapter;
 import com.egonzalez.simpleredditclient.model.TopListing;
 import com.egonzalez.simpleredditclient.service.ServiceFactory;
-import com.viewpagerindicator.TitlePageIndicator;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SAVEDINSTANCESTATE_TOP_LISTING = "SAVEDINSTANCESTATE_TOP_LISTING";
+    private static final String SAVEDINSTANCESTATE_REQUESTDATA = "SAVEDINSTANCESTATE_REQUESTDATA";
 
-    private static final int MAX_ITEMS_PER_PAGE = 10;
-
-    private View mConnectionError;
-    private View mViewPagerLayout;
-    private View mProgressBar;
-    private TitlePageIndicator mPageIndicator;
-
-    private TopListing mTopListing;
+    private boolean mMustRequestData = true;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mConnectionError = findViewById(R.id.activity_main_connection_error);
-        mViewPagerLayout = findViewById(R.id.activity_main_viewpager_layout);
-        mProgressBar = findViewById(R.id.activity_main_progressbar);
-        mPageIndicator = (TitlePageIndicator) findViewById(R.id.activity_main_viewpager_indicator);
-
-        final Button retryButton = (Button) findViewById(R.id.activity_main_connection_error_button);
-        retryButton.setOnClickListener(v -> {
-            requestData();
-        });
-
-        // Restore state
         if (savedInstanceState != null) {
-            mTopListing = savedInstanceState.getParcelable(SAVEDINSTANCESTATE_TOP_LISTING);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (mTopListing == null) {
-            requestData();
-        } else {
-            populate();
+            mMustRequestData = savedInstanceState.getBoolean(SAVEDINSTANCESTATE_REQUESTDATA);
         }
     }
 
@@ -63,7 +31,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putParcelable(SAVEDINSTANCESTATE_TOP_LISTING, mTopListing);
+        outState.putBoolean(SAVEDINSTANCESTATE_REQUESTDATA, mMustRequestData);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mMustRequestData) {
+            requestData();
+        }
     }
 
     private void requestData() {
@@ -71,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
         ServiceFactory.getInstance().getRedditService().getTopListing(0, 50).enqueue(new Callback<TopListing>() {
             @Override
             public void onResponse(final Call<TopListing> call, final Response<TopListing> response) {
-                mTopListing = response.body();
-                populate();
+                showViewPager(response.body());
             }
 
             @Override
@@ -82,35 +58,39 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void populate() {
-        showViewPager();
-
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.activity_main_viewpager);
-
-        viewPager.setAdapter(new TopListingPagerAdapter(
-            getSupportFragmentManager(),
-            MAX_ITEMS_PER_PAGE,
-            mTopListing)
-        );
-
-        mPageIndicator.setViewPager(viewPager);
-    }
-
     private void showConnectionError() {
-        mConnectionError.setVisibility(View.VISIBLE);
-        mViewPagerLayout.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.GONE);
+        final ConnectionProblemFragment connectionProblemFragment = new ConnectionProblemFragment();
+
+        connectionProblemFragment.getRetryButtonClicked()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(fragment -> requestData());
+
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.activity_main_fragment_container, connectionProblemFragment)
+            .commit();
     }
 
-    private void showViewPager() {
-        mConnectionError.setVisibility(View.GONE);
-        mViewPagerLayout.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
+    private void showViewPager(final TopListing topListing) {
+        final ViewPagerFragment fragment = new ViewPagerFragment();
+
+        final Bundle args = new Bundle();
+        args.putParcelable(ViewPagerFragment.ARGUMENT_TOP_LISTING, topListing);
+
+        fragment.setArguments(args);
+
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.activity_main_fragment_container, fragment)
+            .commit();
+
+        mMustRequestData = false;
     }
 
     private void showProgress() {
-        mConnectionError.setVisibility(View.GONE);
-        mViewPagerLayout.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
+        final ProgressBarFragment fragment = new ProgressBarFragment();
+
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.activity_main_fragment_container, fragment)
+            .commit();
     }
 }

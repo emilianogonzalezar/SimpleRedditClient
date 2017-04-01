@@ -2,6 +2,6 @@
     <string name="app_name">Reddit Top 50</string>
     <string name="author_and_date">Sent %1$s by %2$s</string>
     <string name="comments_number">%1$d comments</string>
-    <string name="connection_error">Ups! Something went bad.</string>
+    <string name="connection_error">Oops! Something went wrong.</string>
     <string name="retry">Retry</string>
 </resources>

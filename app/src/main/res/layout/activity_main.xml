@@ -22,66 +22,8 @@
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
+        android:id="@+id/activity_main_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"/>
 
-        <ProgressBar
-            android:id="@+id/activity_main_progressbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
-
-        <RelativeLayout
-            android:id="@+id/activity_main_viewpager_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <com.viewpagerindicator.TitlePageIndicator
-                android:id="@+id/activity_main_viewpager_indicator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:textColor="@color/dark_blue"
-                app:selectedColor="@color/dark_blue"
-                android:background="@color/light_blue"/>
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/activity_main_viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/activity_main_viewpager_indicator"/>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/activity_main_connection_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/reddit"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_connection_error_text"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/connection_error"/>
-
-            <Button
-                android:id="@+id/activity_main_connection_error_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_connection_error_button"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/retry"/>
-
-        </LinearLayout>
-    </FrameLayout>
 </LinearLayout>
