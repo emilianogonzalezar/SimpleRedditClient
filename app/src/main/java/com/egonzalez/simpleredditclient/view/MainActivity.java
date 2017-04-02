@@ -46,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
-        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
-
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(SAVEDINSTANCESTATE_REQUESTDATA, mMustRequestData);
@@ -89,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showConnectionError() {
+        mMustRequestData = true;
         mRefreshButton.setVisibility(View.GONE);
 
         mRefreshButton.setEnabled(false);
@@ -127,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showProgress() {
+        mMustRequestData = true;
         mRefreshButton.setVisibility(View.GONE);
 
         final ProgressBarFragment fragment = new ProgressBarFragment();
