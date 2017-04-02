@@ -23,7 +23,12 @@ public class ConnectionProblemFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_connection_problem, container, false);
 
         final Button retryButton = (Button) view.findViewById(R.id.connection_problem_fragment_button);
-        retryButton.setOnClickListener(v -> onClickSubject.onNext(ConnectionProblemFragment.this));
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                onClickSubject.onNext(ConnectionProblemFragment.this);
+            }
+        });
 
         return view;
     }

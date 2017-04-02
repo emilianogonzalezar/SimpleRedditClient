@@ -39,10 +39,13 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.Vi
         final View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.top_listing_item, parent, false);
         final ViewHolder viewHolder = new ViewHolder(v);
 
-        v.setOnClickListener(view -> {
-            final int index = viewHolder.getAdapterPosition();
-            final TopListingItemData itemData = mTopListingItems.get(index).getData();
-            onClickSubject.onNext(itemData);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                final int index = viewHolder.getAdapterPosition();
+                final TopListingItemData itemData = mTopListingItems.get(index).getData();
+                onClickSubject.onNext(itemData);
+            }
         });
 
         return viewHolder;

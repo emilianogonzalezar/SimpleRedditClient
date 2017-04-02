@@ -13,7 +13,9 @@ import android.webkit.URLUtil;
 import com.egonzalez.simpleredditclient.R;
 import com.egonzalez.simpleredditclient.adapter.TopListingAdapter;
 import com.egonzalez.simpleredditclient.model.TopListingData;
+import com.egonzalez.simpleredditclient.model.TopListingItemData;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class TopListingFragment extends Fragment {
@@ -35,10 +37,13 @@ public class TopListingFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             adapter.getItemClicks().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(topListingItemData -> {
-                    if (URLUtil.isValidUrl(topListingItemData.getUrl())) {
-                        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(topListingItemData.getUrl()));
-                        startActivity(browserIntent);
+                .subscribe(new Consumer<TopListingItemData>() {
+                    @Override
+                    public void accept(final TopListingItemData topListingItemData) throws Exception {
+                        if (URLUtil.isValidUrl(topListingItemData.getUrl())) {
+                            final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(topListingItemData.getUrl()));
+                            startActivity(browserIntent);
+                        }
                     }
                 });
         }

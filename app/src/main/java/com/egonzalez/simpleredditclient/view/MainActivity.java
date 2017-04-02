@@ -1,6 +1,7 @@
 package com.egonzalez.simpleredditclient.view;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -8,6 +9,7 @@ import com.egonzalez.simpleredditclient.R;
 import com.egonzalez.simpleredditclient.model.TopListing;
 import com.egonzalez.simpleredditclient.service.ServiceFactory;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,8 +20,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String SAVEDINSTANCESTATE_REQUESTDATA = "SAVEDINSTANCESTATE_REQUESTDATA";
 
     private boolean mMustRequestData = true;
+    private boolean mIsPausing = false;
 
     private ImageButton mRefreshButton;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -27,18 +31,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mRefreshButton = (ImageButton) findViewById(R.id.toolbar_refresh_button);
-        mRefreshButton.setOnClickListener(v -> {
-            mRefreshButton.setVisibility(View.GONE);
-            requestData();
+        mRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                requestData();
+            }
         });
 
         if (savedInstanceState != null) {
             mMustRequestData = savedInstanceState.getBoolean(SAVEDINSTANCESTATE_REQUESTDATA);
+            mRefreshButton.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
+        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(SAVEDINSTANCESTATE_REQUESTDATA, mMustRequestData);
@@ -47,38 +56,53 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mIsPausing = false;
 
         if (mMustRequestData) {
             requestData();
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mIsPausing = true;
+    }
+
     private void requestData() {
-        mRefreshButton.setVisibility(View.GONE);
         showProgress();
         ServiceFactory.getInstance().getRedditService().getTopListing(0, 50).enqueue(new Callback<TopListing>() {
             @Override
             public void onResponse(final Call<TopListing> call, final Response<TopListing> response) {
-                mRefreshButton.setVisibility(View.VISIBLE);
-                showViewPager(response.body());
+                if (!mIsPausing) {
+                    showViewPager(response.body());
+                }
             }
 
             @Override
             public void onFailure(final Call<TopListing> call, final Throwable t) {
-                mRefreshButton.setVisibility(View.VISIBLE);
-                showConnectionError();
+                if (!mIsPausing) {
+                    showConnectionError();
+                }
             }
         });
     }
 
     private void showConnectionError() {
+        mRefreshButton.setVisibility(View.GONE);
+
         mRefreshButton.setEnabled(false);
         final ConnectionProblemFragment connectionProblemFragment = new ConnectionProblemFragment();
 
         connectionProblemFragment.getRetryButtonClicked()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(fragment -> requestData());
+            .subscribe(new Consumer<Fragment>() {
+                @Override
+                public void accept(final Fragment fragment) throws Exception {
+                    requestData();
+                }
+            });
 
         getSupportFragmentManager().beginTransaction()
             .replace(R.id.activity_main_fragment_container, connectionProblemFragment)
@@ -97,10 +121,14 @@ public class MainActivity extends AppCompatActivity {
             .replace(R.id.activity_main_fragment_container, fragment)
             .commit();
 
+        mRefreshButton.setVisibility(View.VISIBLE);
+
         mMustRequestData = false;
     }
 
     private void showProgress() {
+        mRefreshButton.setVisibility(View.GONE);
+
         final ProgressBarFragment fragment = new ProgressBarFragment();
 
         getSupportFragmentManager().beginTransaction()
