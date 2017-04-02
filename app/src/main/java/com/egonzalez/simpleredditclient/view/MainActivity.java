@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        super.onPause();
         mIsPausing = true;
+        super.onPause();
     }
 
     private void requestData() {
