@@ -73,7 +73,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(final Call<TopListing> call, final Response<TopListing> response) {
                 if (!mIsPausing) {
-                    showViewPager(response.body());
+                    if (response.body().getData().getChildren().isEmpty()) {
+                        showNoResult();
+
+                    } else {
+
+                        showViewPager(response.body());
+                    }
                 }
             }
 
@@ -121,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
             .commit();
 
         mRefreshButton.setVisibility(View.VISIBLE);
-
         mMustRequestData = false;
     }
 
@@ -134,5 +139,16 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
             .replace(R.id.activity_main_fragment_container, fragment)
             .commit();
+    }
+
+    private void showNoResult() {
+        final NoResultsFoundFragment fragment = new NoResultsFoundFragment();
+
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.activity_main_fragment_container, fragment)
+            .commit();
+
+        mRefreshButton.setVisibility(View.VISIBLE);
+        mMustRequestData = false;
     }
 }
