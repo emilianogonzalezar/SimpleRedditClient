@@ -60,7 +60,7 @@ public class ViewPagerFragment extends Fragment {
 
         if (mTopListing != null) {
             mViewPager.setAdapter(new TopListingPagerAdapter(
-                getFragmentManager(),
+                getChildFragmentManager(),
                 MAX_ITEMS_PER_PAGE,
                 mTopListing)
             );
