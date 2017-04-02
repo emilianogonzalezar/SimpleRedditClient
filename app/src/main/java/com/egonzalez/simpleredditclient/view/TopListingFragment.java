@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,14 +27,13 @@ public class TopListingFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
         @Nullable final Bundle savedInstanceState) {
 
-        final TopListingData topListingItems = getArguments().getParcelable(BUNDLE_ARGUMENT_ITEMS);
+        final View view = inflater.inflate(R.layout.fragment_top_listing, container, false);
 
-        final RecyclerView recyclerView =
-            (RecyclerView) inflater.inflate(R.layout.fragment_top_listing, container, false);
+        final TopListingData topListingItems = getArguments().getParcelable(BUNDLE_ARGUMENT_ITEMS);
+        final RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.fragment_top_listing_recyclerview);
 
         if (topListingItems != null) {
             final TopListingAdapter adapter = new TopListingAdapter(topListingItems.getChildren());
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);
             adapter.getItemClicks().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -45,6 +45,6 @@ public class TopListingFragment extends Fragment {
                 });
         }
 
-        return recyclerView;
+        return view;
     }
 }
