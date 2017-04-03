@@ -13,6 +13,7 @@
         android:layout_alignParentBottom="true"
         android:textColor="@color/dark_blue"
         app:selectedColor="@color/dark_blue"
+        android:textSize="@dimen/text_size"
         android:background="@color/light_blue"/>
 
     <android.support.v4.view.ViewPager

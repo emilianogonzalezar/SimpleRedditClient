@@ -1,0 +1,15 @@
+<resources>
+    <dimen name="text_size">24sp</dimen>
+
+    <dimen name="toolbar_title_margin_h">32dp</dimen>
+
+    <dimen name="thumbnail_size">160dp</dimen>
+    <dimen name="top_listing_item_margin">6dp</dimen>
+    <dimen name="top_listing_margin">12dp</dimen>
+
+    <dimen name="margin_connection_error_text">12dp</dimen>
+    <dimen name="margin_connection_error_button">56dp</dimen>
+
+    <dimen name="fragment_no_results_text_padding">64dp</dimen>
+
+</resources>
