@@ -20,7 +20,7 @@
         android:text="@string/connection_error"/>
 
     <Button
-        android:id="@+id/connection_problem_fragment_button"
+        android:id="@+id/fragment_error_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_connection_error_button"

@@ -73,12 +73,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(final Call<TopListing> call, final Response<TopListing> response) {
                 if (!mIsPausing) {
-                    if (response.body().getData().getChildren().isEmpty()) {
-                        showNoResult();
-
+                    if (response.code() != 200) {
+                        showError();
                     } else {
+                        if (response.body() == null ||
+                            response.body().getData() == null ||
+                            response.body().getData().getChildren() == null ||
+                            response.body().getData().getChildren().isEmpty()) {
 
-                        showViewPager(response.body());
+                            showNoResult();
+
+                        } else {
+
+                            showViewPager(response.body());
+                        }
                     }
                 }
             }
@@ -86,20 +94,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(final Call<TopListing> call, final Throwable t) {
                 if (!mIsPausing) {
-                    showConnectionError();
+                    showError();
                 }
             }
         });
     }
 
-    private void showConnectionError() {
+    private void showError() {
         mMustRequestData = true;
         mRefreshButton.setVisibility(View.GONE);
 
         mRefreshButton.setEnabled(false);
-        final ConnectionProblemFragment connectionProblemFragment = new ConnectionProblemFragment();
+        final ErrorFragment errorFragment = new ErrorFragment();
 
-        connectionProblemFragment.getRetryButtonClicked()
+        errorFragment.getRetryButtonClicked()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Consumer<Fragment>() {
@@ -110,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
         getSupportFragmentManager().beginTransaction()
-            .replace(R.id.activity_main_fragment_container, connectionProblemFragment)
+            .replace(R.id.activity_main_fragment_container, errorFragment)
             .commit();
     }
 

@@ -11,7 +11,7 @@ import com.egonzalez.simpleredditclient.R;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
-public class ConnectionProblemFragment extends Fragment {
+public class ErrorFragment extends Fragment {
 
     private final PublishSubject<Fragment> onClickSubject = PublishSubject.create();
 
@@ -20,13 +20,13 @@ public class ConnectionProblemFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
         @Nullable final Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_connection_problem, container, false);
+        final View view = inflater.inflate(R.layout.fragment_error, container, false);
 
-        final Button retryButton = (Button) view.findViewById(R.id.connection_problem_fragment_button);
+        final Button retryButton = (Button) view.findViewById(R.id.fragment_error_button);
         retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                onClickSubject.onNext(ConnectionProblemFragment.this);
+                onClickSubject.onNext(ErrorFragment.this);
             }
         });
 

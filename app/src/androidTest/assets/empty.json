@@ -1,0 +1,9 @@
+{
+  "mock_status": 200,
+  "mock_body": {
+    "kind": "Listing",
+    "data": {
+      "children": []
+    }
+  }
+}

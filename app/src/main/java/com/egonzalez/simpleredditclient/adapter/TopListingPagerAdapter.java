@@ -26,7 +26,9 @@ public class TopListingPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(final int position) {
 
         final List<TopListingItem> topListingSublist =
-            mTopListingItems.subList(mItemsPerPage * position, mItemsPerPage * (position + 1));
+            mTopListingItems.subList(
+                mItemsPerPage * position,
+                Math.min(mItemsPerPage * (position + 1), mTopListingItems.size()));
 
         final Bundle args = new Bundle();
         args.putParcelable(TopListingFragment.BUNDLE_ARGUMENT_ITEMS, new TopListingData(topListingSublist));
@@ -39,7 +41,7 @@ public class TopListingPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return (int) Math.ceil(mTopListingItems.size() / mItemsPerPage);
+        return (int) Math.ceil((float)mTopListingItems.size() / mItemsPerPage);
     }
 
     @Override
